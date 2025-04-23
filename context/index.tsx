@@ -16,7 +16,8 @@ interface Item {
 
 interface Bill {
     totalOriginal: number,
-    totalDiscounted: number
+    totalDiscounted: number,
+    discountPercentage: number
 }
 
 interface UserContextType {
@@ -43,7 +44,7 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [items, setItems] = useState<Item[]>([]);
-    const [bill, setBill] = useState<Bill>({ totalDiscounted: 0, totalOriginal: 0 });
+    const [bill, setBill] = useState<Bill>({ totalDiscounted: 0, totalOriginal: 0, discountPercentage: 0 });
     const [cart, setCart] = useState<Boolean>(false);
     const [promotion, setPromotion] = useState<Boolean>(true);
 
@@ -68,9 +69,15 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                     totalDiscounted += items[index].discountedPrice;
                     totalOriginal += items[index].originalPrice;
                 }
+
+                const discountAmount = totalOriginal - totalDiscounted;
+
+                const discountPercentage = (discountAmount / totalOriginal) * 100;
+
                 setBill({
                     totalDiscounted: totalDiscounted,
-                    totalOriginal: totalOriginal
+                    totalOriginal: totalOriginal,
+                    discountPercentage: discountPercentage
                 })
             } catch (error) {
                 console.log("Error generating bill!");

@@ -23,7 +23,7 @@ const ViewCart = () => {
                     </div>
                 </div>
                 <div className='w-full h-full flex flex-col md:flex-row justify-start items-start gap-10 py-5'>
-                    <div className='w-full md:w-[70%] h-full flex flex-col justify-center items-center gap-7'>
+                    <div className='w-full md:w-[70%] h-full flex flex-col justify-center items-center gap-20 md:gap-7'>
                         {items.map((items, index) => {
                             return (
                                 <div key={index} className='w-full h-[12vh] flex flex-col justify-center items-center gap-2'>
@@ -43,7 +43,7 @@ const ViewCart = () => {
                                                 {items.hrs}HRS
                                             </div>
                                             <h2 className='text-sm md:text-md leading-5 font-bold'>{items.title}</h2>
-                                            <p className='text-xs md:text-md text-gray-400 flex gap-1'>
+                                            <div className='text-xs md:text-md text-gray-400 flex gap-1'>
                                                 <Image
                                                     src={items.authorPicUrl}
                                                     alt='author_pic'
@@ -53,10 +53,21 @@ const ViewCart = () => {
                                                 />
                                                 by: <span className='text-blue-400 underline'>{items.by}</span>
                                                 | <span>{items.lessons} Lessons</span>
-                                                <span className='text-black font-semibold'>
-                                                    {items.ratings}
+                                                <span className='text-black font-semibold flex'>
+                                                    <span className='mr-1'>
+                                                        {items.ratings}
+                                                    </span>
+                                                    {Array(5).fill(0).map((_, index) => {
+                                                        return (
+                                                            <div key={index}>
+                                                                <svg className={`w-3 h-4 ${items.ratings < (index + 1) ? 'text-[#DADADA]' : 'text-[#F86537]'}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 20">
+                                                                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                                                                </svg>
+                                                            </div>
+                                                        );
+                                                    })}
                                                 </span>
-                                            </p>
+                                            </div>
                                         </div>
                                         <div
                                             onClick={() => {
@@ -82,7 +93,7 @@ const ViewCart = () => {
                             )
                         })}
                     </div>
-                    <div className='w-full md:w-[30%] min-h-[30vh] flex flex-col justify-center items-center bg-white rounded-lg p-5 md:p-5 gap-2'>
+                    <div className='w-full md:w-[30%] min-h-[30vh] flex flex-col justify-center items-center bg-white rounded-lg p-5 md:p-5 gap-2 md:mt-0 mt-10'>
                         <div className='w-full flex justify-between items-center'>
                             <div className='w-1/2 flex justify-start items-start text-blue-500 font-bold'>
                                 Total:
@@ -90,7 +101,7 @@ const ViewCart = () => {
                             <div className='w-1/2 flex flex-col justify-end items-end'>
                                 <h1 className='text-2xl font-bold'>${bill.totalDiscounted}.00</h1>
                                 <h1 className='text-xl text-gray-500 line-through'>${bill.totalOriginal}.00</h1>
-                                <h1 className='text-lg text-gray-600'>Discount 78% off</h1>
+                                <h1 className='text-lg text-gray-600'>Discount {Math.round(bill.discountPercentage)}% off</h1>
                             </div>
                         </div>
                         <hr className='w-[80%] text-gray-300' />
