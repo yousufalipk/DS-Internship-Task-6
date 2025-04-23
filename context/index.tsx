@@ -1,5 +1,6 @@
 "use client"
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface Item {
     title: string;
@@ -13,6 +14,11 @@ interface Item {
     ratings: number
 }
 
+interface Bill {
+    totalOriginal: number,
+    totalDiscounted: number
+}
+
 interface UserContextType {
     items: Item[];
     setItems: React.Dispatch<React.SetStateAction<Item[]>>;
@@ -20,6 +26,8 @@ interface UserContextType {
     setCart: React.Dispatch<React.SetStateAction<Boolean>>;
     promotion: Boolean;
     setPromotion: React.Dispatch<React.SetStateAction<Boolean>>;
+    bill: Bill;
+    setBill: React.Dispatch<React.SetStateAction<Bill>>;
     handleRemoveItem(index: number): void
 }
 
@@ -35,43 +43,49 @@ export const useUser = () => {
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
     const [items, setItems] = useState<Item[]>([]);
+    const [bill, setBill] = useState<Bill>({ totalDiscounted: 0, totalOriginal: 0 });
     const [cart, setCart] = useState<Boolean>(false);
     const [promotion, setPromotion] = useState<Boolean>(true);
 
-    const item1 = {
-        title: 'The power of Accountablity Complete Begineers Guide',
-        by: 'Claudia Pruitt',
-        imageUrl: 'https://res.cloudinary.com/du6yj0y8r/image/upload/v1745313786/courseWebsite/yfsacyfsd7iiqmv5mlql.png',
-        discountedPrice: 149.00,
-        originalPrice: 180.00,
-        hrs: 5,
-        authorPicUrl: 'https://res.cloudinary.com/du6yj0y8r/image/upload/v1745319951/courseWebsite/ucfepb0kvehk8ddd3afx.png',
-        lessons: 10,
-        ratings: 4.8
-    }
+    useEffect(() => {
+        const fetchItems = async () => {
+            try {
+                const response = await axios.get('/cartItems.json');
+                setItems(prevItems => [...prevItems, ...response.data]);
+            } catch (error) {
+                console.log("Internal Server Error");
+            }
+        }
 
-    const item2 = {
-        title: 'The power of Accountablity Complete Begineers Guide',
-        by: 'Claudia Pruitt',
-        imageUrl: 'https://res.cloudinary.com/du6yj0y8r/image/upload/v1745313786/courseWebsite/slfbflnkrjbzvzamurtd.png',
-        discountedPrice: 149.00,
-        originalPrice: 180.00,
-        hrs: 5,
-        authorPicUrl: 'https://res.cloudinary.com/du6yj0y8r/image/upload/v1745319951/courseWebsite/ucfepb0kvehk8ddd3afx.png',
-        lessons: 10,
-        ratings: 4.8
-    }
+        fetchItems();
+    }, [])
 
     useEffect(() => {
-        setItems(prevItems => [...prevItems, item1, item2]);
-    }, [])
+        const calculateTotal = () => {
+            try {
+                let totalOriginal: number = 0, totalDiscounted: number = 0;
+                for (let index: number = 0; index < items.length; index++) {
+                    totalDiscounted += items[index].discountedPrice;
+                    totalOriginal += items[index].originalPrice;
+                }
+                setBill({
+                    totalDiscounted: totalDiscounted,
+                    totalOriginal: totalOriginal
+                })
+            } catch (error) {
+                console.log("Error generating bill!");
+            }
+        }
+
+        calculateTotal();
+    }, [items])
 
     const handleRemoveItem = (index: number) => {
         setItems(prevItems => prevItems.filter((_, i) => i !== index));
     };
 
     return (
-        <UserContext.Provider value={{ items, setItems, handleRemoveItem, cart, setCart, promotion, setPromotion }}>
+        <UserContext.Provider value={{ items, setItems, handleRemoveItem, cart, setCart, promotion, setPromotion, bill, setBill }}>
             {children}
         </UserContext.Provider>
     );

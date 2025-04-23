@@ -8,13 +8,13 @@ import Image from 'next/image';
 
 const Cart = () => {
 
-  const { items, handleRemoveItem, setCart } = useUser();
+  const { items, handleRemoveItem, setCart, bill } = useUser();
 
   return (
-    <div className='w-full min-h-screen flex justify-end items-center relative'>
+    <div className='w-full h-full flex justify-end items-center relative border-green-500'>
       <div className='absolute inset-0 bg-[#0A141980]/50 backdrop-brightness-50 z-0 backdrop-blur-[2px] w-full h-full'></div>
 
-      <div className='relative z-10 w-full md:w-[90%] lg:w-[40%] h-screen flex flex-col justify-start items-start p-10 md:p-20 bg-white gap-3'>
+      <div className='relative z-10 w-full md:w-[90%] lg:w-[40%] h-full flex flex-col justify-start items-start p-10 md:p-20 bg-white gap-3 overflow-x-hidden overflow-y-scroll'>
 
         <div className='w-full h-[5vh] flex justify-between items-center'>
           <h1 className='text-2xl md:text-3xl font-bold line-clamp-1'>Your Shopping Cart</h1>
@@ -52,7 +52,7 @@ const Cart = () => {
                 <div className='w-[60%] h-full pl-2 flex flex-col justify-start items-start gap-[1px]'>
                   <h2 className='text-xs md:text-md font-bold line-clamp-2'>{items.title}</h2>
                   <p className='text-xs md:text-md text-gray-400'>by: <span className='text-blue-400'>{items.by}</span></p>
-                  <p className='font-semibold text-xs md:text-md'>${items.discountedPrice}.00 <span className='text-gray-400'>{items.originalPrice}.00</span></p>
+                  <p className='font-semibold text-xs md:text-md'>${items.discountedPrice}.00 <span className='text-gray-400 line-through'>{items.originalPrice}.00</span></p>
                 </div>
                 <div
                   onClick={() => {
@@ -74,7 +74,7 @@ const Cart = () => {
         <div className='w-full h-[20vh] flex flex-col justify-center items-center'>
           <div className='w-full h-1/2 flex justify-between items-center'>
             <h2 className='font-bold text-sm md:text-md'>Subtotal:</h2>
-            <h1 className='font-bold text-lg'>$298.00</h1>
+            <h1 className='font-bold text-lg'>${bill.totalDiscounted}.00</h1>
           </div>
           <hr className='w-[90%] text-gray-300' />
           <div className='w-full h-1/2 flex justify-between items-center gap-2 mt-4'>
