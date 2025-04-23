@@ -3,6 +3,7 @@ import React from 'react'
 import { useUser } from '../../context/index';
 import Cart from '../Cart/Cart';
 import Image from "next/image";
+import Link from 'next/link';
 import CrossIcon from '../../public/cross.svg';
 import CartIcon from '../../public/cart.svg';
 import Logo from '../../public/logo.svg';
@@ -51,14 +52,14 @@ const Navbar = () => {
             )}
 
             <div className="w-[80%] flex justify-between items-center p-5 gap-5">
-                <div className="hover:cursor-pointer flex justify-start items-center">
+                <Link href={'/'} onClick={() => setCart(false)} className="hover:cursor-pointer flex justify-start items-center">
                     <Image
                         src={Logo}
                         alt="logo"
                         width={150}
                         height={150}
                     />
-                </div>
+                </Link>
 
                 <div className="hidden w-[40%] lg:flex justify-center items-center gap-5">
                     <div className="relative w-[70%] flex justify-center items-center">

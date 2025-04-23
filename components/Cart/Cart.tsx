@@ -3,7 +3,7 @@ import { useUser } from '../../context/index';
 import CartIcon from '../../public/cart.svg';
 import TrashIcon from '../../public/trash.svg';
 import CrossIcon from '../../public/cross.svg';
-
+import Link from 'next/link';
 import Image from 'next/image';
 
 const Cart = () => {
@@ -78,9 +78,14 @@ const Cart = () => {
           </div>
           <hr className='w-[90%] text-gray-300' />
           <div className='w-full h-1/2 flex justify-between items-center gap-2 mt-4'>
-            <button className='w-1/2 p-2 rounded-full border border-gray-400 text-gray-800 text-sm md:text-md line-clamp-1'>
+            <Link
+              onClick={() => {
+                setCart(false)
+              }}
+              href={'/viewCart'}
+              className='w-1/2 p-2 rounded-full border border-gray-400 text-gray-800 text-sm md:text-md line-clamp-1 text-center'>
               View Cart
-            </button>
+            </Link>
             <button className='w-1/2 p-2 rounded-full border border-[#F86537] bg-[#F86537] text-sm md:text-md line-clamp-1 text-white'>
               {`Proceed to checkout ->`}
             </button>
